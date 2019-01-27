@@ -13,8 +13,8 @@ BOOL SetSecCapabilities(PSID sid, SECURITY_CAPABILITIES *capabiliti);
 BOOL Sandboxed(CHAR *path)
 {
     PSID pSid = NULL;
-	SIZE_T sz_attr = 0;
-	CHAR *str_sid = nullptr;
+	  SIZE_T sz_attr = 0;
+	  CHAR *str_sid = nullptr;
     SECURITY_CAPABILITIES secap = {0};
     STARTUPINFOEXA startup = {0};
     PROCESS_INFORMATION process = {0};
@@ -44,10 +44,10 @@ BOOL Sandboxed(CHAR *path)
             printf("SetSecurityCapabilities failed, last error: %d\n", GetLastError());
             return FALSE;
         }
-		
-		if (InitializeProcThreadAttributeList(NULL, 
-			1, 
-			NULL, 
+
+		if (InitializeProcThreadAttributeList(NULL,
+			1,
+			NULL,
 			&sz_attr))
 		{
 			printf("1. InitializeProcThreadAttributeList() failed, last error: %d \n", GetLastError());
@@ -56,35 +56,35 @@ BOOL Sandboxed(CHAR *path)
 
 
         if(!InitializeProcThreadAttributeList(startup.lpAttributeList = (LPPROC_THREAD_ATTRIBUTE_LIST)malloc(sz_attr),
-			1, 
-			NULL, 
+			1,
+			NULL,
 			&sz_attr))
         {
             printf("2. InitializeProcThreadAttributeList() failed, last error: %d", GetLastError());
 			return FALSE;
         }
 
-        if(!UpdateProcThreadAttribute(startup.lpAttributeList, 
-			0, 
-			PROC_THREAD_ATTRIBUTE_SECURITY_CAPABILITIES, 
-			&secap, 
-			sizeof(secap), 
-			NULL, 
+        if(!UpdateProcThreadAttribute(startup.lpAttributeList,
+			0,
+			PROC_THREAD_ATTRIBUTE_SECURITY_CAPABILITIES,
+			&secap,
+			sizeof(secap),
+			NULL,
 			NULL))
         {
             printf("UpdateProcThreadAttribute() failed, last error: %d", GetLastError());
 			return FALSE;
         }
 
-        if(!CreateProcessA(path, 
-			NULL, 
-			NULL, 
-			NULL, 
-			FALSE, 
-			EXTENDED_STARTUPINFO_PRESENT, 
-			NULL, 
-			NULL, 
-			(LPSTARTUPINFOA)&startup, 
+        if(!CreateProcessA(path,
+			NULL,
+			NULL,
+			NULL,
+			FALSE,
+			EXTENDED_STARTUPINFO_PRESENT,
+			NULL,
+			NULL,
+			(LPSTARTUPINFOA)&startup,
 			&process))
         {
             printf("Failed to create process %s, last error: %d\n", path, GetLastError());
@@ -104,8 +104,8 @@ BOOL Sandboxed(CHAR *path)
 
     if(startup.lpAttributeList)
         DeleteProcThreadAttributeList(startup.lpAttributeList);
- 
- 
+
+
     if(secap.Capabilities)
         free(secap.Capabilities);
 
@@ -118,7 +118,7 @@ BOOL Sandboxed(CHAR *path)
 BOOL SetSecCapabilities(PSID container_sid, SECURITY_CAPABILITIES *capabilities)
 {
     SID_AND_ATTRIBUTES *attr = nullptr;
-	DWORD szSid = SECURITY_MAX_SID_SIZE;
+	  DWORD szSid = SECURITY_MAX_SID_SIZE;
 
     attr = (SID_AND_ATTRIBUTES *)malloc(sizeof(SID_AND_ATTRIBUTES));
 
@@ -141,11 +141,11 @@ BOOL SetSecCapabilities(PSID container_sid, SECURITY_CAPABILITIES *capabilities)
 		return FALSE;
 	}
 
-    attr[0].Attributes = SE_GROUP_ENABLED;
+  attr[0].Attributes = SE_GROUP_ENABLED;
 
 	capabilities->CapabilityCount = 1;
-    capabilities->Capabilities = attr;
+  capabilities->Capabilities = attr;
 	capabilities->AppContainerSid = container_sid;
 
-    return TRUE;
+  return TRUE;
 }
