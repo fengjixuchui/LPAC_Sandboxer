@@ -1,0 +1,1 @@
+BOOL Sandboxed(CHAR *executable_path);
